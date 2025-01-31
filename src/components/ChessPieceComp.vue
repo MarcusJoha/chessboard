@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, defineProps, defineEmits } from 'vue';
+  import { computed, defineProps, defineEmits, } from 'vue';
 
   const props = defineProps ({
     piece: String,
@@ -21,12 +21,13 @@
 
     emit("piece-dragged", { row: props.row, col: props.col });
   };
+
 </script>
 
 <template>
   <div
   class="chess-piece"
-  :class="pieceColor"
+  :class="[pieceColor]"
   draggable="true"
   @dragstart="startDrag"
   > {{ piece }}</div>

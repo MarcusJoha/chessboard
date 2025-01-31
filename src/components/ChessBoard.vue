@@ -65,6 +65,10 @@ const handleTileClick = (tile: TileSquare) => {
   console.log(`Tile clicked: Row ${tile.row}, Column ${tile.col}, Notation ${tile.notation}, Piece: ${tile.piece}`);
 };
 
+function resetChessBoard() {
+  initializeBoard()
+}
+
 onMounted(initializeBoard);
 
 
@@ -83,6 +87,7 @@ onMounted(initializeBoard);
       @piece-moved="movePiece"
     />
   </div>
+    <button class="reset-button" @click="resetChessBoard">Reset Chess Board</button>
 
 </template>
 
@@ -93,5 +98,17 @@ onMounted(initializeBoard);
     grid-template-rows: repeat(8, 60px);
     width: 480px;
     border: 2px solid black;
+  }
+  .reset-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: 0.3s;
+    margin-top: 1rem;
+
   }
 </style>

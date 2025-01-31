@@ -1,5 +1,4 @@
 export enum ChessPiece {
-  EMPTY = "",
   BLACK_ROOK = "♜",
   BLACK_KNIGHT = "♞",
   BLACK_BISHOP = "♝",

@@ -47,7 +47,7 @@ const initializeBoard = () => {
   }));
 }
 
-const movePiece = ({from, to}) => {
+const movePiece = ({from, to}: {from: TileSquare, to: TileSquare}) => {
   const fromIndex = from.row * 8 + from.col;
   const toIndex = to.row * 8 + to.col;
 
@@ -87,7 +87,7 @@ onMounted(initializeBoard);
       @piece-moved="movePiece"
     />
   </div>
-    <button class="reset-button" @click="resetChessBoard">Reset Chess Board</button>
+    <button class="reset-button" @click="resetChessBoard">Reset Chessboard</button>
 
 </template>
 

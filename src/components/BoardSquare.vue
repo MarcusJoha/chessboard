@@ -27,10 +27,6 @@ import ChessPieceComp from './ChessPieceComp.vue';
 
   const tileColor = computed(() => ((props.row ?? 0) + ( props.col ?? 0)) % 2 === 0 ? "light": "dark");
 
-  const startDrag = (data) => {
-      console.log("Dragging piece from:", data);
-    };
-
   const onTileClick = () => {
     emit("tile-clicked", {
       row:props.row,
@@ -46,8 +42,6 @@ import ChessPieceComp from './ChessPieceComp.vue';
     if (data) {
       emit("piece-moved", {from: data, to: {row: props.row, col: props.col}});
     }
-    console.log(data)
-
   }
 
 </script>
@@ -96,7 +90,7 @@ import ChessPieceComp from './ChessPieceComp.vue';
 }
 
 .tile:hover {
-  background-color: rgb(71, 71, 89);
+  background-color: rgb(126, 126, 155);
 }
 
 </style>

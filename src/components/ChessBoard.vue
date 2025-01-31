@@ -49,7 +49,7 @@ const initializeBoard = () => {
 
 const movePiece = ({from, to}) => {
   const fromIndex = from.row * 8 + from.col;
-  const toIndex = to.row * + to.col;
+  const toIndex = to.row * 8 + to.col;
 
   // If valid move piece
   if (board.value[fromIndex].piece) {

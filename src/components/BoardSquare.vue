@@ -23,7 +23,7 @@ import ChessPieceComp from './ChessPieceComp.vue';
   }
   })
 
-  const emit = defineEmits(["tile-clicked", "piece-moved"]);
+  const emit = defineEmits(["tile-clicked", "piece-moved", "piece-dragged"]);
 
   const tileColor = computed(() => ((props.row ?? 0) + ( props.col ?? 0)) % 2 === 0 ? "light": "dark");
 
@@ -40,8 +40,9 @@ import ChessPieceComp from './ChessPieceComp.vue';
     })
   };
 
-  const onDrop = (event) => {
-    const data = JSON.parse(event.dataTransfer.getData("text/plain"));
+  const onDrop = (event:DragEvent) => {
+    event.preventDefault();
+    const data = JSON.parse(event.dataTransfer!.getData("text/plain"));
     if (data) {
       emit("piece-moved", {from: data, to: {row: props.row, col: props.col}});
     }

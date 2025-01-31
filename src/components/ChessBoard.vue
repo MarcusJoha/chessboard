@@ -15,6 +15,7 @@
 
 const board = ref<TileSquare[]>([]); // ref([])
 const letters = ['a','b','c','d','e','f','g','h'];
+const ranks = [8,7,6,5,4,3,2,1]
 
 const initialPieces: Record<number, ChessPiece> = {
     0: ChessPiece.BLACK_ROOK, 1: ChessPiece.BLACK_KNIGHT, 2: ChessPiece.BLACK_BISHOP,

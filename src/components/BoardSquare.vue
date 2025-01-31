@@ -90,7 +90,8 @@ import ChessPieceComp from './ChessPieceComp.vue';
 }
 
 .tile:hover {
-  background-color: rgb(126, 126, 155);
+  border-style: solid;
+  border-color:  rgb(126, 126, 155);
 }
 
 </style>

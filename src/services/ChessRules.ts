@@ -1,6 +1,13 @@
 import type { TileSquare } from '@/types/tilesquare.ts';
 
 
+// fix this with target piece and piece
+const checkEnemyPieceOrEmpty = (index: number, board: TileSquare[], isWhitePiece: boolean): boolean => {
+  const targetPiece = board[index].piece;
+  return !targetPiece || (isWhitePiece && targetPiece.charCodeAt(0) >= 9818) || (!isWhitePiece && targetPiece.charCodeAt(0) < 9818);
+}
+
+
 export const getKnightMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
   const moves: TileSquare[] = [];
   const possibleMoves = [
@@ -14,20 +21,15 @@ export const getKnightMoves = (row: number, col: number, board: TileSquare[]): T
     { row: row + 2, col: col + 1 },
   ];
 
-  const CheckEnemyPieceOrEmpty = (index: number, board: TileSquare[]): boolean => {
-    const targetPiece = board[index].piece;
-    return !targetPiece || (isWhitePiece && targetPiece.charCodeAt(0) < 9818) || (!isWhitePiece && targetPiece.charCodeAt(0) >= 9818);
-  }
-
   const piece = board[row * 8 + col].piece;
-  const isWhitePiece = piece !== null && piece !== undefined && piece.charCodeAt(0) >= 9818;
+  const isWhitePiece = piece !== null && piece !== undefined && piece.charCodeAt(0) < 9818;
 
   for (const move of possibleMoves) {
     if (move.row >= 0 && move.row < 8 && move.col >= 0 && move.col < 8) {
       const index = move.row *8 + move.col;
 
       // check if target square is empty or has an enemy piece
-      if (CheckEnemyPieceOrEmpty(index, board)) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
         moves.push(board[index]);
       }
     }
@@ -36,10 +38,79 @@ export const getKnightMoves = (row: number, col: number, board: TileSquare[]): T
 }
 
 
-// export const getWhitePawnMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
-// }
+export const getWhitePawnMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
+  const moves: TileSquare[] = [];
 
-// export const getBlackPawnMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {}
+  const piece = board[row * 8 + col].piece;
+  const isWhitePiece = piece !== null && piece !== undefined && piece.charCodeAt(0) < 9818;
+
+  if (row > 0) {
+    const forwardOneIndex = (row - 1) * 8 + col;
+    if(!board[forwardOneIndex].piece) {
+      moves.push(board[forwardOneIndex])
+
+      if (row === 6) {
+        const forwardTwoIndex = (row-2)*8 + col;
+        if(!board[forwardTwoIndex].piece) {
+          moves.push(board[forwardTwoIndex]);
+        }
+      }
+    }
+  }
+  // capture diagonally left
+  if (row > 0 && col > 0) {
+    const captureLeftIndex = (row-1)*8 + col-1;
+    if (checkEnemyPieceOrEmpty(captureLeftIndex, board, isWhitePiece)) {
+      moves.push(board[captureLeftIndex]);
+    }
+  }
+
+  // capture diagonally right
+  if (row > 0 && col < 7) {
+    const captureRightIndex = (row-1)*8 + col+1;
+    if (checkEnemyPieceOrEmpty(captureRightIndex, board, isWhitePiece)) {
+      moves.push(board[captureRightIndex]);
+    }
+  }
+  return moves;
+}
+
+export const getBlackPawnMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
+  const moves: TileSquare[] = [];
+
+  const piece = board[row * 8 + col].piece;
+  const isWhitePiece = piece !== null && piece !== undefined && piece.charCodeAt(0) < 9818;
+
+  if (row < 7) {
+    const forwardOneIndex = (row + 1) * 8 + col;
+    if(!board[forwardOneIndex].piece) {
+      moves.push(board[forwardOneIndex])
+
+      if (row === 1) {
+        const forwardTwoIndex = (row+2)*8 + col;
+        if(!board[forwardTwoIndex].piece) {
+          moves.push(board[forwardTwoIndex]);
+        }
+      }
+    }
+  }
+  // capture diagonally left
+  if (row < 7 && col > 0) {
+    const captureLeftIndex = (row+1)*8 + col-1;
+    if (checkEnemyPieceOrEmpty(captureLeftIndex, board, isWhitePiece)) {
+      moves.push(board[captureLeftIndex]);
+    }
+  }
+
+  // capture diagonally right
+  if (row < 7 && col < 7) {
+    const captureRightIndex = (row+1)*8 + col+1;
+    if (checkEnemyPieceOrEmpty(captureRightIndex, board, isWhitePiece)) {
+      moves.push(board[captureRightIndex]);
+    }
+  }
+  return moves;
+}
 
 // export const getRookMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {}
 

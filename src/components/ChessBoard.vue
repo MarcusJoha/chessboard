@@ -39,6 +39,8 @@ const initialPieces: Record<number, ChessPiece> = {
     //   56: "♖", 57: "♘", 58: "♗", 59: "♕", 60: "♔", 61: "♗", 62: "♘", 63: "♖"
     // };
 
+const isWhiteTurn = ref(true);
+
 const initializeBoard = () => {
   board.value = Array.from({length: 64}, (_,i) => ({
   row: Math.floor(i/8),
@@ -56,6 +58,7 @@ const movePiece = ({from, to}: {from: TileSquare, to: TileSquare}) => {
   if (board.value[fromIndex].piece) {
     board.value[toIndex].piece = board.value[fromIndex].piece;
     board.value[fromIndex].piece = undefined;
+    isWhiteTurn.value = !isWhiteTurn.value;
     console.log(
   `Moved ${board.value[toIndex].piece} from ${board.value[fromIndex].notation} to ${board.value[toIndex].notation}`
     );
@@ -68,6 +71,7 @@ const handleTileClick = (tile: TileSquare) => {
 
 function resetChessBoard() {
   initializeBoard()
+  isWhiteTurn.value = true;
 }
 
 onMounted(initializeBoard);
@@ -76,6 +80,7 @@ onMounted(initializeBoard);
 </script>
 
 <template>
+<h3>{{ isWhiteTurn ? "White" : "Black" }} turn</h3>
 <div class="board">
     <BoardSquare
       v-for="(tile, index) in board"
@@ -84,6 +89,7 @@ onMounted(initializeBoard);
       :col="tile.col"
       :notation="tile.notation"
       :piece="tile.piece"
+      :isWhiteTurn="isWhiteTurn"
       @tile-clicked="handleTileClick"
       @piece-moved="movePiece"
     />

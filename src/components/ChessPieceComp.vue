@@ -5,6 +5,7 @@
     piece: String,
     row: Number,
     col: Number,
+    isWhiteTurn: Boolean
   })
 
   const pieceColor = computed(() =>
@@ -13,11 +14,18 @@
 
   // Do not have to define emits when I have DragEvent
   const startDrag = (event: DragEvent) => {
+    if(!isDraggable.value) return;
     event.dataTransfer?.setData(
     "text/plain",
     JSON.stringify({ piece: props.piece, row: props.row, col: props.col })
     );
   };
+
+  const isDraggable = computed(() => {
+    if (!props.piece) return false;
+    const isWhitePiece = props.piece.charCodeAt(0) < 9818;
+    return (isWhitePiece && props.isWhiteTurn) || (!isWhitePiece && !props.isWhiteTurn);
+  })
 
 </script>
 
@@ -25,7 +33,7 @@
   <div
   class="chess-piece"
   :class="[pieceColor]"
-  draggable="true"
+  :draggable="isDraggable"
   @dragstart="startDrag"
   > {{ piece }}</div>
 

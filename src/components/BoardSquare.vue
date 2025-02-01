@@ -20,7 +20,8 @@ import ChessPieceComp from './ChessPieceComp.vue';
     piece: {
       type: Object as PropType<ChessPiece>,
       default: null
-  }
+    },
+    isWhiteTurn: Boolean
   })
 
   const emit = defineEmits(["tile-clicked", "piece-moved"]);
@@ -59,6 +60,7 @@ import ChessPieceComp from './ChessPieceComp.vue';
     :piece="piece"
     :row="row"
     :col="col"
+    :isWhiteTurn="isWhiteTurn"
     />
 
   </div>

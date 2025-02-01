@@ -5,6 +5,7 @@
   import BoardSquare from './BoardSquare.vue';
   import { ChessPiece } from '@/ChessPiece';
   import type { TileSquare } from '@/types/tilesquare.ts';
+  import { getKnightMoves } from '@/services/ChessRules';
 
 
 const board = ref<TileSquare[]>([]); // ref([])
@@ -46,17 +47,32 @@ const initializeBoard = () => {
 }
 
 const movePiece = ({from, to}: {from: TileSquare, to: TileSquare}) => {
+  // multiply by 8 because board is represented as a 1D array of size 64
+  // if row 4: 8*4 + 32 + col(3) = board[35]
   const fromIndex = from.row * 8 + from.col;
   const toIndex = to.row * 8 + to.col;
 
   // If valid move piece
   if (board.value[fromIndex].piece) {
-    board.value[toIndex].piece = board.value[fromIndex].piece;
-    board.value[fromIndex].piece = null;
-    isWhiteTurn.value = !isWhiteTurn.value;
-    console.log(
-  `Moved ${board.value[toIndex].piece} from ${board.value[fromIndex].notation} to ${board.value[toIndex].notation}`
-    );
+    const validMoves = getValidMoves(board.value[fromIndex].piece, from.row, from.col);
+    if (validMoves.some(move => move.row === to.row && move.col === to.col)) {
+      board.value[toIndex].piece = board.value[fromIndex].piece;
+      board.value[fromIndex].piece = null;
+      isWhiteTurn.value = !isWhiteTurn.value;
+      console.log(
+    `Moved ${board.value[toIndex].piece} from ${board.value[fromIndex].notation} to ${board.value[toIndex].notation}`
+      );
+    }
+  }
+}
+
+const getValidMoves = (piece: ChessPiece, row: number, col: number) => {
+  switch (piece) {
+    case ChessPiece.WHITE_KNIGHT:
+    case ChessPiece.BLACK_KNIGHT:
+      return getKnightMoves(row, col, board.value);
+    default:
+      return [];
   }
 }
 

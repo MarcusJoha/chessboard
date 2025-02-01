@@ -5,7 +5,7 @@
   import BoardSquare from './BoardSquare.vue';
   import { ChessPiece } from '@/ChessPiece';
   import type { TileSquare } from '@/types/tilesquare.ts';
-  import { getKnightMoves, getWhitePawnMoves, getBlackPawnMoves, getRookMoves, getBishopMoves, getQueenMoves } from '@/services/ChessRules';
+  import { getKnightMoves, getWhitePawnMoves, getBlackPawnMoves, getRookMoves, getBishopMoves, getQueenMoves, getKingMoves } from '@/services/ChessRules';
 
 
 const board = ref<TileSquare[]>([]); // ref([])
@@ -84,6 +84,9 @@ const getValidMoves = (piece: ChessPiece, row: number, col: number) => {
     case ChessPiece.WHITE_QUEEN:
     case ChessPiece.BLACK_QUEEN:
       return getQueenMoves(row, col, board.value);
+    case ChessPiece.WHITE_KING:
+    case ChessPiece.BLACK_KING:
+      return getKingMoves(row, col, board.value);
     default:
       return [];
   }

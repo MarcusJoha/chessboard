@@ -1,5 +1,5 @@
 import type { TileSquare } from '@/types/tilesquare.ts';
-import type { ChessPiece } from '@/ChessPiece';
+import { ChessPiece } from '@/ChessPiece';
 
 
 // Check if target square is empty or has an enemy piece
@@ -12,6 +12,59 @@ const checkIfWhitePiece = (piece: ChessPiece | null): boolean => {
   return piece !== null && piece !== undefined && piece.charCodeAt(0) < 9818;
 
 }
+/**
+ *
+ * @param row
+ * @param col
+ * @param board
+ * @returns boolean if square is under attack
+ *
+ * Function to decide if a square is under attack by an enemy piece for when king moves
+ * At this moment I get an error of to much recursion, I will try to fix it later
+ */
+
+// const isSquareUnderAttack = (row: number, col: number, board: TileSquare[], isWhitePiece: boolean): boolean => {
+//   for (let r = 0; r < 8; r++) {
+//     for (let c = 0; c < 8; c++) {
+//       const piece = board[r * 8 + c].piece;
+//       if (piece && checkIfWhitePiece(piece) !== isWhitePiece) {
+//         let moves: TileSquare[] = [];
+//         switch (piece) {
+//           case ChessPiece.WHITE_KNIGHT:
+//           case ChessPiece.BLACK_KNIGHT:
+//             moves = getKnightMoves(r, c, board);
+//             break;
+//           case ChessPiece.WHITE_PAWN:
+//             moves = getWhitePawnMoves(r, c, board);
+//             break;
+//           case ChessPiece.BLACK_PAWN:
+//             moves = getBlackPawnMoves(r, c, board);
+//             break;
+//           case ChessPiece.WHITE_ROOK:
+//           case ChessPiece.BLACK_ROOK:
+//             moves = getRookMoves(r, c, board);
+//             break;
+//           case ChessPiece.WHITE_BISHOP:
+//           case ChessPiece.BLACK_BISHOP:
+//             moves = getBishopMoves(r, c, board);
+//             break;
+//           case ChessPiece.WHITE_QUEEN:
+//           case ChessPiece.BLACK_QUEEN:
+//             moves = getQueenMoves(r, c, board);
+//             break;
+//           case ChessPiece.WHITE_KING:
+//           case ChessPiece.BLACK_KING:
+//             moves = getKingMoves(r, c, board);
+//             break;
+//         }
+//         if (moves.some(move => move.row === row && move.col === col)) {
+//           return true;
+//         }
+//       }
+//     }
+//   }
+//   return false;
+// }
 
 export const getKnightMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
   const moves: TileSquare[] = [];
@@ -199,6 +252,31 @@ export const getQueenMoves = (row: number, col: number, board: TileSquare[]): Ti
   const downRightMoves = moveDownRight(row, col, board, isWhitePiece);
   moves.push(...downRightMoves);
 
+  return moves;
+}
+
+export const getKingMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
+  const moves: TileSquare[] = [];
+  const possibleMoves = [
+    { row: row - 1, col: col - 1 },
+    { row: row - 1, col: col },
+    { row: row - 1, col: col + 1 },
+    { row: row, col: col - 1 },
+    { row: row, col: col + 1 },
+    { row: row + 1, col: col - 1 },
+    { row: row + 1, col: col },
+    { row: row + 1, col: col + 1 },
+  ];
+  const piece = board[row*8 + col].piece;
+  const isWhitePiece = checkIfWhitePiece(piece);
+  for (const move of possibleMoves) {
+    if (move.row >= 0 && move.row < 8 && move.col >= 0 && move.col < 8) {
+      const index = move.row*8 + move.col;
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+    }
+  }
   return moves;
 }
 

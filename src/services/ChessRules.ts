@@ -117,7 +117,7 @@ export const getWhitePawnMoves = (row: number, col: number, board: TileSquare[])
   // capture diagonally left
   if (row > 0 && col > 0) {
     const captureLeftIndex = (row-1)*8 + col-1;
-    if (checkEnemyPieceOrEmpty(captureLeftIndex, board, isWhitePiece)) {
+    if (board[captureLeftIndex].piece && checkEnemyPieceOrEmpty(captureLeftIndex, board, isWhitePiece)) {
       moves.push(board[captureLeftIndex]);
     }
   }
@@ -125,7 +125,7 @@ export const getWhitePawnMoves = (row: number, col: number, board: TileSquare[])
   // capture diagonally right
   if (row > 0 && col < 7) {
     const captureRightIndex = (row-1)*8 + col+1;
-    if (checkEnemyPieceOrEmpty(captureRightIndex, board, isWhitePiece)) {
+    if (board[captureRightIndex].piece && checkEnemyPieceOrEmpty(captureRightIndex, board, isWhitePiece)) {
       moves.push(board[captureRightIndex]);
     }
   }
@@ -154,7 +154,7 @@ export const getBlackPawnMoves = (row: number, col: number, board: TileSquare[])
   // capture diagonally left
   if (row < 7 && col > 0) {
     const captureLeftIndex = (row+1)*8 + col-1;
-    if (checkEnemyPieceOrEmpty(captureLeftIndex, board, isWhitePiece)) {
+    if (board[captureLeftIndex].piece && checkEnemyPieceOrEmpty(captureLeftIndex, board, isWhitePiece)) {
       moves.push(board[captureLeftIndex]);
     }
   }
@@ -162,7 +162,7 @@ export const getBlackPawnMoves = (row: number, col: number, board: TileSquare[])
   // capture diagonally right
   if (row < 7 && col < 7) {
     const captureRightIndex = (row+1)*8 + col+1;
-    if (checkEnemyPieceOrEmpty(captureRightIndex, board, isWhitePiece)) {
+    if (board[captureRightIndex].piece && checkEnemyPieceOrEmpty(captureRightIndex, board, isWhitePiece)) {
       moves.push(board[captureRightIndex]);
     }
   }

@@ -3,20 +3,15 @@
 
   import {ref, onMounted} from 'vue'
   import BoardSquare from './BoardSquare.vue';
-  import { ChessPiece, type ChessPieceType } from '@/ChessPiece';
-
-  interface TileSquare {
-    row: number,
-    col: number,
-    notation: string,
-    piece: ChessPieceType | undefined
-  }
+  import { ChessPiece } from '@/ChessPiece';
+  import type { TileSquare } from '@/types/tilesquare.ts';
 
 
 const board = ref<TileSquare[]>([]); // ref([])
 const letters = ['a','b','c','d','e','f','g','h'];
 // const ranks = [8,7,6,5,4,3,2,1]
 
+// todo: should move this to a another file
 const initialPieces: Record<number, ChessPiece> = {
     0: ChessPiece.BLACK_ROOK, 1: ChessPiece.BLACK_KNIGHT, 2: ChessPiece.BLACK_BISHOP,
     3: ChessPiece.BLACK_QUEEN, 4: ChessPiece.BLACK_KING, 5: ChessPiece.BLACK_BISHOP,
@@ -57,7 +52,7 @@ const movePiece = ({from, to}: {from: TileSquare, to: TileSquare}) => {
   // If valid move piece
   if (board.value[fromIndex].piece) {
     board.value[toIndex].piece = board.value[fromIndex].piece;
-    board.value[fromIndex].piece = undefined;
+    board.value[fromIndex].piece = null;
     isWhiteTurn.value = !isWhiteTurn.value;
     console.log(
   `Moved ${board.value[toIndex].piece} from ${board.value[fromIndex].notation} to ${board.value[toIndex].notation}`
@@ -88,7 +83,7 @@ onMounted(initializeBoard);
       :row="tile.row"
       :col="tile.col"
       :notation="tile.notation"
-      :piece="tile.piece"
+      :piece="tile.piece as ChessPiece"
       :isWhiteTurn="isWhiteTurn"
       @tile-clicked="handleTileClick"
       @piece-moved="movePiece"

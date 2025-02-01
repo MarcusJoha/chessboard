@@ -23,7 +23,7 @@ import ChessPieceComp from './ChessPieceComp.vue';
   }
   })
 
-  const emit = defineEmits(["tile-clicked", "piece-moved", "piece-dragged"]);
+  const emit = defineEmits(["tile-clicked", "piece-moved"]);
 
   const tileColor = computed(() => ((props.row ?? 0) + ( props.col ?? 0)) % 2 === 0 ? "light": "dark");
 
@@ -59,7 +59,6 @@ import ChessPieceComp from './ChessPieceComp.vue';
     :piece="piece"
     :row="row"
     :col="col"
-    @dragstart="startDrag"
     />
 
   </div>

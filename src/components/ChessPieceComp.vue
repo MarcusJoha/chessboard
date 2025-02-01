@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, defineProps, defineEmits, } from 'vue';
+  import { computed, defineProps } from 'vue';
 
   const props = defineProps ({
     piece: String,
@@ -7,19 +7,16 @@
     col: Number,
   })
 
-  const emit = defineEmits( ["tile-clicked", "piece-dragged"]);
-
   const pieceColor = computed(() =>
     props.piece && props.piece.charCodeAt(0) < 9818 ? "white-piece" : "black-piece"
   );
 
+  // Do not have to define emits when I have DragEvent
   const startDrag = (event: DragEvent) => {
     event.dataTransfer?.setData(
     "text/plain",
     JSON.stringify({ piece: props.piece, row: props.row, col: props.col })
     );
-
-    emit("piece-dragged", { row: props.row, col: props.col });
   };
 
 </script>

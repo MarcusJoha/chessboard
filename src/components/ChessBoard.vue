@@ -110,6 +110,12 @@ onMounted(initializeBoard);
     border-radius: 5px;
     transition: 0.3s;
     margin-top: 1rem;
-
+  }
+  .reset-button:active {
+    background-color: #0056b3;
+    transform: scale(0.95);
+  }
+  .reset-button:hover {
+    background-color: #0056b3;
   }
 </style>

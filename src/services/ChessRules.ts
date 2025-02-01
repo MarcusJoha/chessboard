@@ -146,58 +146,61 @@ export const getBishopMoves = (row: number, col: number, board: TileSquare[]): T
   const isWhitePiece = checkIfWhitePiece(piece);
 
   // move diagonally up-left
-  for (let r = row-1, c = col-1; r >= 0 && c >= 0; r--,c--) {
-    const index = r*8 + c;
-    if (board[index].piece) {
-      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
-        moves.push(board[index]);
-      }
-      break;
-    }
-    moves.push(board[index]);
-  }
+  const upLeftMoves = moveUpLeft(row, col, board, isWhitePiece);
+  moves.push(...upLeftMoves);
 
   // move diagonally up-right
-  for (let r = row-1, c = col+1; r >= 0 && c < 8; r--,c++) {
-    const index = r*8 + c;
-    if (board[index].piece) {
-      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
-        moves.push(board[index]);
-      }
-      break;
-    }
-    moves.push(board[index]);
-  }
+  const upRightMoves = moveUpRight(row, col, board, isWhitePiece);
+  moves.push(...upRightMoves);
 
   // move diagonally down-left
-  for (let r = row+1, c = col-1; r < 8 && c >= 0; r++,c--) {
-    const index = r*8 + c;
-    if (board[index].piece) {
-      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
-        moves.push(board[index]);
-      }
-      break;
-    }
-    moves.push(board[index]);
-  }
+  const downLeftMoves = movemoveDownLeft(row, col, board, isWhitePiece);
+  moves.push(...downLeftMoves);
 
   // move diagonally down-right
-  for (let r = row+1, c = col+1; r < 8 && c < 8; r++,c++) {
-    const index = r*8 + c;
-    if (board[index].piece) {
-      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
-        moves.push(board[index]);
-      }
-      break;
-    }
-    moves.push(board[index]);
-  }
+  const downRightMoves = moveDownRight(row, col, board, isWhitePiece);
+  moves.push(...downRightMoves);
+
   return moves;
 }
 
-//export const getQueenMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
+export const getQueenMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
+  const moves: TileSquare[] = [];
+  const piece = board[row*8 + col].piece;
+  const isWhitePiece = checkIfWhitePiece(piece);
 
-// }
+  const upMoves = moveUp(row, col, board, isWhitePiece);
+  moves.push(...upMoves);
+
+  // move left
+  const leftMoves = moveLeft(row, col, board, isWhitePiece);
+  moves.push(...leftMoves);
+
+  // move right
+  const rightMoves = moveRight(row, col, board, isWhitePiece);
+  moves.push(...rightMoves);
+  // move down
+  const downMoves = moveDown(row, col, board, isWhitePiece);
+  moves.push(...downMoves);
+
+  // move diagonally up-left
+  const upLeftMoves = moveUpLeft(row, col, board, isWhitePiece);
+  moves.push(...upLeftMoves);
+
+  // move diagonally up-right
+  const upRightMoves = moveUpRight(row, col, board, isWhitePiece);
+  moves.push(...upRightMoves);
+
+  // move diagonally down-left
+  const downLeftMoves = movemoveDownLeft(row, col, board, isWhitePiece);
+  moves.push(...downLeftMoves);
+
+  // move diagonally down-right
+  const downRightMoves = moveDownRight(row, col, board, isWhitePiece);
+  moves.push(...downRightMoves);
+
+  return moves;
+}
 
 
 const moveUp = (row: number, col: number,board: TileSquare[], isWhitePiece: boolean): TileSquare[] => {
@@ -261,10 +264,62 @@ const moveRight = (row: number, col: number, board: TileSquare[], isWhitePiece: 
   return moves;
 }
 
-// const moveUpLeft = () => {}
+const moveUpLeft = (row: number, col: number, board: TileSquare[], isWhitePiece: boolean): TileSquare[] => {
+  const moves: TileSquare[] = [];
+  for (let r = row-1, c = col-1; r >= 0 && c >= 0; r--,c--) {
+    const index = r*8 + c;
+    if (board[index].piece) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+      break;
+    }
+    moves.push(board[index]);
+  }
+  return moves;
+}
 
-// const moveUpRight = () => {}
+const moveUpRight = (row: number, col: number, board: TileSquare[], isWhitePiece: boolean): TileSquare[] => {
+  const moves: TileSquare[] = [];
+  for (let r = row-1, c = col+1; r >= 0 && c < 8; r--,c++) {
+    const index = r*8 + c;
+    if (board[index].piece) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+      break;
+    }
+    moves.push(board[index]);
+  }
+  return moves;
+}
 
-// const movemoveDownLeft = () => {}
+const movemoveDownLeft = (row: number, col: number, board: TileSquare[], isWhitePiece: boolean): TileSquare[] => {
+  const moves: TileSquare[] = [];
+  for (let r = row+1, c = col-1; r < 8 && c >= 0; r++,c--) {
+    const index = r*8 + c;
+    if (board[index].piece) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+      break;
+    }
+    moves.push(board[index]);
+  }
+  return moves;
+}
 
-// const moveDownRight = () => {}
+const moveDownRight = (row: number, col: number, board: TileSquare[], isWhitePiece: boolean): TileSquare[] => {
+  const moves: TileSquare[] = [];
+  for (let r = row+1, c = col+1; r < 8 && c < 8; r++,c++) {
+    const index = r*8 + c;
+    if (board[index].piece) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+      break;
+    }
+    moves.push(board[index]);
+  }
+  return moves;
+}

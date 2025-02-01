@@ -14,16 +14,20 @@ export const getKnightMoves = (row: number, col: number, board: TileSquare[]): T
     { row: row + 2, col: col + 1 },
   ];
 
+  const CheckEnemyPieceOrEmpty = (index: number, board: TileSquare[]): boolean => {
+    const targetPiece = board[index].piece;
+    return !targetPiece || (isWhitePiece && targetPiece.charCodeAt(0) < 9818) || (!isWhitePiece && targetPiece.charCodeAt(0) >= 9818);
+  }
+
   const piece = board[row * 8 + col].piece;
   const isWhitePiece = piece !== null && piece !== undefined && piece.charCodeAt(0) >= 9818;
 
   for (const move of possibleMoves) {
     if (move.row >= 0 && move.row < 8 && move.col >= 0 && move.col < 8) {
       const index = move.row *8 + move.col;
-      const targetPiece = board[index].piece;
 
       // check if target square is empty or has an enemy piece
-      if (!targetPiece || (isWhitePiece && targetPiece.charCodeAt(0) < 9818) || (!isWhitePiece && targetPiece.charCodeAt(0) >= 9818)) {
+      if (CheckEnemyPieceOrEmpty(index, board)) {
         moves.push(board[index]);
       }
     }

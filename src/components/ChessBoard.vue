@@ -9,13 +9,13 @@
     row: number,
     col: number,
     notation: string,
-    piece: ChessPieceType | null
+    piece: ChessPieceType | undefined
   }
 
 
 const board = ref<TileSquare[]>([]); // ref([])
 const letters = ['a','b','c','d','e','f','g','h'];
-const ranks = [8,7,6,5,4,3,2,1]
+// const ranks = [8,7,6,5,4,3,2,1]
 
 const initialPieces: Record<number, ChessPiece> = {
     0: ChessPiece.BLACK_ROOK, 1: ChessPiece.BLACK_KNIGHT, 2: ChessPiece.BLACK_BISHOP,
@@ -55,7 +55,7 @@ const movePiece = ({from, to}: {from: TileSquare, to: TileSquare}) => {
   // If valid move piece
   if (board.value[fromIndex].piece) {
     board.value[toIndex].piece = board.value[fromIndex].piece;
-    board.value[fromIndex].piece = null;
+    board.value[fromIndex].piece = undefined;
     console.log(
   `Moved ${board.value[toIndex].piece} from ${board.value[fromIndex].notation} to ${board.value[toIndex].notation}`
     );

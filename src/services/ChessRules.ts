@@ -1,7 +1,7 @@
 import type { TileSquare } from '@/types/tilesquare.ts';
 
 
-// fix this with target piece and piece
+// Check if target square is empty or has an enemy piece
 const checkEnemyPieceOrEmpty = (index: number, board: TileSquare[], isWhitePiece: boolean): boolean => {
   const targetPiece = board[index].piece;
   return !targetPiece || (isWhitePiece && targetPiece.charCodeAt(0) >= 9818) || (!isWhitePiece && targetPiece.charCodeAt(0) < 9818);
@@ -36,7 +36,6 @@ export const getKnightMoves = (row: number, col: number, board: TileSquare[]): T
   }
   return moves;
 }
-
 
 export const getWhitePawnMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
   const moves: TileSquare[] = [];
@@ -112,7 +111,58 @@ export const getBlackPawnMoves = (row: number, col: number, board: TileSquare[])
   return moves;
 }
 
-// export const getRookMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {}
+export const getRookMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {
+  const moves: TileSquare[] = [];
+  const piece = board[row*8 + col].piece;
+  const isWhitePiece = piece !== null && piece !== undefined && piece.charCodeAt(0) < 9818;
+
+  // move up
+  for (let r = row - 1; r >= 0; r--) {
+    const index = r*8 + col;
+    if (board[index].piece) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+      break;
+    }
+    moves.push(board[index]);
+  }
+  // move left
+  for (let c = col -1; c >= 0; c--) {
+    const index = row*8 + c;
+    if (board[index].piece) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+      break;
+    }
+    moves.push(board[index]);
+  }
+
+  // move right
+  for (let c = col +1; c <8; c++) {
+    const index = row*8 + c;
+    if (board[index].piece) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+      break;
+    }
+    moves.push(board[index]);
+  }
+  // move down
+  for (let r = row + 1; r < 8; r++) {
+    const index = r*8 + col;
+    if (board[index].piece) {
+      if (checkEnemyPieceOrEmpty(index, board, isWhitePiece)) {
+        moves.push(board[index]);
+      }
+      break;
+    }
+    moves.push(board[index]);
+  }
+  return moves;
+}
 
 // export const getBishopMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {}
 

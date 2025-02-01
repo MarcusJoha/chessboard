@@ -5,7 +5,7 @@
   import BoardSquare from './BoardSquare.vue';
   import { ChessPiece } from '@/ChessPiece';
   import type { TileSquare } from '@/types/tilesquare.ts';
-  import { getKnightMoves, getWhitePawnMoves, getBlackPawnMoves } from '@/services/ChessRules';
+  import { getKnightMoves, getWhitePawnMoves, getBlackPawnMoves, getRookMoves } from '@/services/ChessRules';
 
 
 const board = ref<TileSquare[]>([]); // ref([])
@@ -52,7 +52,7 @@ const movePiece = ({from, to}: {from: TileSquare, to: TileSquare}) => {
   const fromIndex = from.row * 8 + from.col;
   const toIndex = to.row * 8 + to.col;
 
-  // If valid move piece
+  // If valid, move piece
   if (board.value[fromIndex].piece) {
     const validMoves = getValidMoves(board.value[fromIndex].piece, from.row, from.col);
     if (validMoves.some(move => move.row === to.row && move.col === to.col)) {
@@ -75,6 +75,9 @@ const getValidMoves = (piece: ChessPiece, row: number, col: number) => {
       return getWhitePawnMoves(row,col,board.value);
     case ChessPiece.BLACK_PAWN:
       return getBlackPawnMoves(row,col,board.value);
+    case ChessPiece.WHITE_ROOK:
+    case ChessPiece.BLACK_ROOK:
+      return getRookMoves(row, col, board.value);
     default:
       return [];
   }

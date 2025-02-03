@@ -1,4 +1,6 @@
-from node:20-alpine3.21
+FROM node:20-alpine3.21
+
+RUN mkdir -p /app
 
 WORKDIR /app
 

@@ -14,21 +14,11 @@ const checkIfWhitePiece = (piece: ChessPiece | null): boolean => {
 
 }
 
-// * king char code
-// * white king: 9812
-// * black king: 9818
-/*
-? Want to see if king moves, there is an enemy piece that covers that square
-? Want to see if you move your own piece you open up the king to be captured
-? When example white moves and set the black king in check, that is a valid moves
-? but when white move and open up white king to check, that is an invalid move
-*/
 const isSquareUnderAttack = (row:number, col: number, board: TileSquare[], isWhitePiece: boolean): boolean => {
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
       const piece = board[r * 8 + c].piece;
 
-      // ! works now
       if (piece && checkIfWhitePiece(piece) === isWhitePiece) {
         let moves: TileSquare[] = [];
         switch (piece) {
@@ -69,6 +59,33 @@ const isSquareUnderAttack = (row:number, col: number, board: TileSquare[], isWhi
     }
   }
   return false;
+};
+
+
+export const isKingInCheck = (board: TileSquare[], isWhiteKing: boolean): boolean => {
+  // Find the king's position
+  const kingPiece = isWhiteKing ? ChessPiece.WHITE_KING : ChessPiece.BLACK_KING;
+  let kingRow = -1;
+  let kingCol = -1;
+
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      if (board[r * 8 + c].piece === kingPiece) {
+        kingRow = r;
+        kingCol = c;
+        break;
+      }
+    }
+    if (kingRow !== -1) break; // Exit outer loop if king is found
+  }
+  // If the king is not found (shouldn't happen in a valid game)
+  if (kingRow === -1 || kingCol === -1) {
+    console.error("King not found on the board!");
+    return false;
+  }
+
+  // Check if the king's position is under attack
+  return isSquareUnderAttack(kingRow, kingCol, board, !isWhiteKing);
 };
 
 export const getKnightMoves = (row: number, col: number, board: TileSquare[]): TileSquare[] => {

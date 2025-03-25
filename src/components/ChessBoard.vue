@@ -5,7 +5,7 @@
   import BoardSquare from './BoardSquare.vue';
   import { ChessPiece } from '@/ChessPiece';
   import type { TileSquare } from '@/types/tilesquare.ts';
-  import { getKnightMoves, getWhitePawnMoves, getBlackPawnMoves, getRookMoves, getBishopMoves, getQueenMoves, getKingMoves } from '@/services/ChessRules';
+  import { getKnightMoves, getWhitePawnMoves, getBlackPawnMoves, getRookMoves, getBishopMoves, getQueenMoves, getKingMoves, isKingInCheck } from '@/services/ChessRules';
 
 
 const board = ref<TileSquare[]>([]); // ref([])
@@ -46,51 +46,89 @@ const initializeBoard = () => {
   }));
 }
 
-const movePiece = ({from, to}: {from: TileSquare, to: TileSquare}) => {
-  // multiply by 8 because board is represented as a 1D array of size 64
-  // if row 4: 8*4 + 32 + col(3) = board[35]
+const movePiece = ({ from, to }: { from: TileSquare; to: TileSquare }) => {
   const fromIndex = from.row * 8 + from.col;
   const toIndex = to.row * 8 + to.col;
 
-  // If valid, move piece
+  // If the piece exists at the source square
   if (board.value[fromIndex].piece) {
+    // Get valid moves for the piece
     const validMoves = getValidMoves(board.value[fromIndex].piece, from.row, from.col);
+
+    // Check if the target square is a valid move
     if (validMoves.some(move => move.row === to.row && move.col === to.col)) {
-      board.value[toIndex].piece = board.value[fromIndex].piece;
-      board.value[fromIndex].piece = null;
-      isWhiteTurn.value = !isWhiteTurn.value;
-      console.log(
-    `Moved ${board.value[toIndex].piece} from ${board.value[fromIndex].notation} to ${board.value[toIndex].notation}`
-      );
+      // Check if the move is valid (doesn't leave the king in check)
+      if (isValidBoard(fromIndex, toIndex)) {
+        // Update the board
+        board.value[toIndex].piece = board.value[fromIndex].piece;
+        board.value[fromIndex].piece = null;
+
+        // Switch turns
+        isWhiteTurn.value = !isWhiteTurn.value;
+
+        console.log(
+          `Moved ${board.value[toIndex].piece} from ${from.notation} to ${to.notation}`
+        );
+      } else {
+        console.log("Invalid move: King would be in check.");
+      }
+    } else {
+      console.log("Invalid move");
     }
   }
-}
+};
 
-const getValidMoves = (piece: ChessPiece, row: number, col: number) => {
-  switch (piece) {
-    case ChessPiece.WHITE_KNIGHT:
-    case ChessPiece.BLACK_KNIGHT:
-      return getKnightMoves(row, col, board.value);
-    case ChessPiece.WHITE_PAWN:
-      return getWhitePawnMoves(row,col,board.value);
-    case ChessPiece.BLACK_PAWN:
-      return getBlackPawnMoves(row,col,board.value);
-    case ChessPiece.WHITE_ROOK:
-    case ChessPiece.BLACK_ROOK:
-      return getRookMoves(row, col, board.value);
-    case ChessPiece.WHITE_BISHOP:
-    case ChessPiece.BLACK_BISHOP:
-      return getBishopMoves(row, col, board.value);
-    case ChessPiece.WHITE_QUEEN:
-    case ChessPiece.BLACK_QUEEN:
-      return getQueenMoves(row, col, board.value);
-    case ChessPiece.WHITE_KING:
-    case ChessPiece.BLACK_KING:
-      return getKingMoves(row, col, board.value);
-    default:
-      return [];
-  }
-}
+const isValidBoard = (fromIndex: number, toIndex: number): boolean => {
+  // Create a copy of the board
+  const boardCopy = board.value.map(tile => ({ ...tile }));
+
+  // Simulate the move
+  boardCopy[toIndex].piece = boardCopy[fromIndex].piece;
+  boardCopy[fromIndex].piece = null;
+
+  const isWhiteKing = isWhiteTurn.value;
+
+  const isCheck = isKingInCheck(boardCopy, isWhiteKing);
+
+  return !isCheck;
+};
+
+const getValidMoves = (piece: ChessPiece, row: number, col: number): TileSquare[] => {
+  const possibleMoves = (() => {
+    switch (piece) {
+      case ChessPiece.WHITE_KNIGHT:
+      case ChessPiece.BLACK_KNIGHT:
+        return getKnightMoves(row, col, board.value);
+      case ChessPiece.WHITE_PAWN:
+        return getWhitePawnMoves(row, col, board.value);
+      case ChessPiece.BLACK_PAWN:
+        return getBlackPawnMoves(row, col, board.value);
+      case ChessPiece.WHITE_ROOK:
+      case ChessPiece.BLACK_ROOK:
+        return getRookMoves(row, col, board.value);
+      case ChessPiece.WHITE_BISHOP:
+      case ChessPiece.BLACK_BISHOP:
+        return getBishopMoves(row, col, board.value);
+      case ChessPiece.WHITE_QUEEN:
+      case ChessPiece.BLACK_QUEEN:
+        return getQueenMoves(row, col, board.value);
+      case ChessPiece.WHITE_KING:
+      case ChessPiece.BLACK_KING:
+        return getKingMoves(row, col, board.value);
+      default:
+        return [];
+    }
+  })();
+
+  // Filter out moves that leave the king in check (handle pinned pieces)
+  return possibleMoves.filter(move => {
+    const fromIndex = row * 8 + col;
+    const toIndex = move.row * 8 + move.col;
+
+    // Simulate the move and check if the king is in check
+    return isValidBoard(fromIndex, toIndex);
+  });
+};
 
 const handleTileClick = (tile: TileSquare) => {
   console.log(`Tile clicked: Row ${tile.row}, Column ${tile.col}, Notation ${tile.notation}, Piece: ${tile.piece}`);

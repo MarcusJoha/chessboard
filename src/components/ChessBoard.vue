@@ -67,7 +67,7 @@ const movePiece = ({ from, to }: { from: TileSquare; to: TileSquare }) => {
         isWhiteTurn.value = !isWhiteTurn.value;
 
         console.log(
-          `Moved ${board.value[toIndex].piece} from ${from.notation} to ${to.notation}`
+          `Moved ${board.value[toIndex].piece} from ${board.value[fromIndex].notation} to ${board.value[toIndex].notation}`
         );
       } else {
         console.log("Invalid move: King would be in check.");

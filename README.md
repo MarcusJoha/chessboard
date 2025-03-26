@@ -39,9 +39,11 @@ pnpm lint
 ```
 
 ## build docker image
+```sh
 docker build -t chess-board
-
+```
 ## Run frontend in docker
+```sh
 docker run -p 4173:4173 chess-board
-
+```
 
